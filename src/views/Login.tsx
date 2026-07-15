@@ -40,40 +40,21 @@ export function Login({ users, onLogin }: { users: User[]; onLogin: (user: User)
   return (
     <div className="flex min-h-screen">
       {/* Left panel */}
-      <div className="relative hidden w-1/2 flex-col justify-between bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 p-12 lg:flex">
+      <div className="relative hidden w-1/2 flex-col justify-center bg-gradient-to-br from-cyan-700 via-cyan-600 to-cyan-500 p-12 lg:flex">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 backdrop-blur shadow-lg">
             <Ticket size={22} className="text-white" />
           </div>
           <div>
             <p className="text-xl font-bold tracking-tight text-white">CALMA</p>
-            <p className="text-xs font-medium uppercase tracking-wider text-slate-400">Mesa de Ayuda</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-cyan-100">Mesa de Ayuda</p>
           </div>
         </div>
-        <div>
+        <div className="mt-16 max-w-md">
           <h1 className="text-4xl font-bold leading-tight tracking-tight text-white">
-            Gestión de tickets<br />
-            <span className="text-slate-400">simple y trazable.</span>
+            Sistema de tickets
           </h1>
-          <p className="mt-4 max-w-md text-base text-slate-400">
-            Sistema integral de mesa de ayuda para la empresa. Crea, asigna, resuelve y audita tickets con control de SLA en tiempo real.
-          </p>
-          <div className="mt-8 flex gap-6">
-            <div className="flex items-center gap-2 text-slate-300">
-              <ShieldCheck size={18} className="text-emerald-400" />
-              <span className="text-sm">Auditoría completa</span>
-            </div>
-            <div className="flex items-center gap-2 text-slate-300">
-              <Clock size={18} className="text-amber-400" />
-              <span className="text-sm">Control de SLA</span>
-            </div>
-            <div className="flex items-center gap-2 text-slate-300">
-              <Users size={18} className="text-blue-400" />
-              <span className="text-sm">4 roles</span>
-            </div>
-          </div>
         </div>
-        <p className="text-xs text-slate-500">© 2025 CALMA · Sistema de Mesa de Ayuda</p>
       </div>
 
       {/* Right panel */}
@@ -81,7 +62,7 @@ export function Login({ users, onLogin }: { users: User[]; onLogin: (user: User)
         <div className="mx-auto w-full max-w-sm">
           <div className="mb-8 lg:hidden">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-900 text-white">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-600 text-white">
                 <Ticket size={20} />
               </div>
               <p className="text-lg font-bold tracking-tight text-slate-900">CALMA</p>
@@ -99,7 +80,7 @@ export function Login({ users, onLogin }: { users: User[]; onLogin: (user: User)
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-colors focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+                  className="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-colors focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
                   placeholder="tu@empresa.cl"
                   required
                 />
@@ -113,7 +94,7 @@ export function Login({ users, onLogin }: { users: User[]; onLogin: (user: User)
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-colors focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+                  className="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition-colors focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
                   placeholder="••••••••"
                   required
                 />
@@ -139,7 +120,7 @@ export function Login({ users, onLogin }: { users: User[]; onLogin: (user: User)
                 <button
                   key={d.rol}
                   onClick={() => quickLogin(d.rol)}
-                  className="rounded-lg border border-slate-200 bg-white p-2.5 text-left transition-all hover:border-slate-300 hover:shadow-sm"
+                  className="rounded-lg border border-slate-200 bg-white p-2.5 text-left transition-all hover:border-sky-300 hover:shadow-sm"
                 >
                   <p className="text-xs font-semibold text-slate-900">{ROL_LABEL[d.rol]}</p>
                   <p className="truncate text-[11px] text-slate-400">{d.nombre}</p>

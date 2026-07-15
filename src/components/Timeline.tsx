@@ -14,7 +14,7 @@ const tipoIcon: Record<string, typeof MessageSquare> = {
 
 const tipoColor: Record<string, string> = {
   creacion: 'bg-emerald-50 text-emerald-600',
-  cambio_estado: 'bg-blue-50 text-blue-600',
+  cambio_estado: 'bg-sky-50 text-sky-600',
   comentario: 'bg-slate-100 text-slate-600',
   escalamiento: 'bg-rose-50 text-rose-600',
   solicitud_info: 'bg-amber-50 text-amber-600',

@@ -54,14 +54,14 @@ export function AppShell({
   const items = navByRol[rol];
 
   const sidebar = (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col bg-cyan-50">
       <div className="flex items-center gap-2.5 px-5 py-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-slate-800 to-slate-950 text-white">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-600 to-cyan-700 text-white shadow-sm">
           <Ticket size={20} />
         </div>
         <div>
           <p className="text-base font-bold tracking-tight text-slate-900">CALMA</p>
-          <p className="text-[10px] font-medium uppercase tracking-wider text-slate-400">Mesa de Ayuda</p>
+          <p className="text-[10px] font-medium uppercase tracking-wider text-cyan-700">Mesa de Ayuda</p>
         </div>
       </div>
       <nav className="flex-1 space-y-1 px-3 py-2">
@@ -71,8 +71,8 @@ export function AppShell({
             onClick={() => { onNav(item.id); setMobileOpen(false); }}
             className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
               activeNav === item.id
-                ? 'bg-slate-900 text-white'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                ? 'bg-cyan-600 text-white'
+                : 'text-slate-700 hover:bg-cyan-100 hover:text-slate-900'
             }`}
           >
             {item.icon}
@@ -80,10 +80,10 @@ export function AppShell({
           </button>
         ))}
       </nav>
-      <div className="border-t border-slate-200 p-3">
-        <div className="rounded-lg bg-slate-50 p-3">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Modo demo</p>
-          <p className="mt-1 text-xs text-slate-500">Cambia de rol para explorar las vistas.</p>
+      <div className="border-t border-cyan-100 p-3">
+        <div className="rounded-lg bg-cyan-100 p-3">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-cyan-700">Modo demo</p>
+          <p className="mt-1 text-xs text-slate-700">Cambia de rol para explorar las vistas.</p>
         </div>
       </div>
     </div>
@@ -108,32 +108,32 @@ export function AppShell({
 
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Topbar */}
-        <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 lg:px-6">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-cyan-400 bg-cyan-600 px-4 lg:px-6 text-white">
           <div className="flex items-center gap-3">
             <button className="lg:hidden" onClick={() => setMobileOpen(true)}>
-              <Menu size={22} className="text-slate-600" />
+              <Menu size={22} className="text-white" />
             </button>
             <div>
-              <p className="text-sm font-semibold text-slate-900">{ROL_LABEL[rol]}</p>
-              <p className="text-xs text-slate-400">Sistema de gestión de tickets</p>
+              <p className="text-sm font-semibold text-white">{ROL_LABEL[rol]}</p>
+              <p className="text-xs text-cyan-100">Sistema de gestión de tickets</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button className="relative rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+            <button className="relative rounded-lg p-2 text-cyan-100 hover:bg-cyan-500 hover:text-white">
               <Bell size={18} />
               <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white" />
             </button>
             <div className="relative">
               <button
                 onClick={() => setSwitchOpen((v) => !v)}
-                className="flex items-center gap-2 rounded-lg p-1.5 pr-2 hover:bg-slate-100"
+                className="flex items-center gap-2 rounded-lg p-1.5 pr-2 hover:bg-cyan-500"
               >
                 <Avatar initials={user.avatar_initials} size="md" />
                 <div className="hidden text-left sm:block">
-                  <p className="text-sm font-medium text-slate-900">{user.nombre}</p>
-                  <p className="text-xs text-slate-400">{user.cargo}</p>
+                  <p className="text-sm font-medium text-white">{user.nombre}</p>
+                  <p className="text-xs text-cyan-100">{user.cargo}</p>
                 </div>
-                <ChevronDown size={16} className="text-slate-400" />
+                <ChevronDown size={16} className="text-cyan-100" />
               </button>
               {switchOpen && (
                 <>
@@ -149,7 +149,7 @@ export function AppShell({
                         }`}
                       >
                         {ROL_LABEL[r]}
-                        {r === rol && <span className="h-1.5 w-1.5 rounded-full bg-slate-900" />}
+                        {r === rol && <span className="h-1.5 w-1.5 rounded-full bg-sky-600" />}
                       </button>
                     ))}
                     <div className="my-1 border-t border-slate-100" />

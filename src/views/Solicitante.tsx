@@ -54,7 +54,7 @@ export function SolicitanteDashboard({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar por código o asunto..."
-            className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-10 pr-3 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+            className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-10 pr-3 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
           />
         </div>
         <div className="flex gap-1 rounded-lg border border-slate-200 bg-white p-1">
@@ -63,7 +63,7 @@ export function SolicitanteDashboard({
               key={f}
               onClick={() => setFilter(f)}
               className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
-                filter === f ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
+                filter === f ? 'bg-sky-600 text-white' : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
               {f}
@@ -176,7 +176,7 @@ export function SolicitanteNuevo({
               value={asunto}
               onChange={(e) => setAsunto(e.target.value)}
               placeholder="Resumen breve del problema o solicitud"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
             />
           </div>
           <div>
@@ -186,7 +186,7 @@ export function SolicitanteNuevo({
               onChange={(e) => setDescripcion(e.target.value)}
               rows={5}
               placeholder="Describe el problema, pasos para reproducirlo, y cualquier contexto relevante."
-              className="w-full resize-none rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+              className="w-full resize-none rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
             />
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -195,7 +195,7 @@ export function SolicitanteNuevo({
               <select
                 value={categoriaId}
                 onChange={(e) => setCategoriaId(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
               >
                 <option value="">Selecciona...</option>
                 {activeCats.map((c) => (
@@ -208,7 +208,7 @@ export function SolicitanteNuevo({
               <select
                 value={prioridad}
                 onChange={(e) => setPrioridad(e.target.value as Prioridad)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
               >
                 <option value="critica">Crítica</option>
                 <option value="alta">Alta</option>

@@ -26,7 +26,7 @@ export function PrioridadBadge({ prioridad }: { prioridad: Prioridad }) {
 export function Avatar({ initials, size = 'md' }: { initials: string; size?: 'sm' | 'md' | 'lg' }) {
   const sz = size === 'sm' ? 'h-7 w-7 text-xs' : size === 'lg' ? 'h-12 w-12 text-base' : 'h-9 w-9 text-sm';
   return (
-    <div className={`${sz} flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-slate-700 to-slate-900 font-semibold text-white`}>
+    <div className={`${sz} flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-sky-700 font-semibold text-white`}>
       {initials}
     </div>
   );
@@ -40,7 +40,7 @@ export function Button({
   size?: 'sm' | 'md' | 'lg';
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const variants = {
-    primary: 'bg-slate-900 text-white hover:bg-slate-800 active:bg-slate-950 shadow-sm',
+    primary: 'bg-sky-600 text-white hover:bg-sky-700 active:bg-sky-800 shadow-sm',
     secondary: 'bg-slate-100 text-slate-700 hover:bg-slate-200 active:bg-slate-300',
     ghost: 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
     danger: 'bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-sm',
@@ -67,12 +67,13 @@ export function StatCard({
   label: string;
   value: ReactNode;
   icon: ReactNode;
-  accent?: 'slate' | 'blue' | 'emerald' | 'amber' | 'rose' | 'cyan';
+  accent?: 'slate' | 'blue' | 'sky' | 'emerald' | 'amber' | 'rose' | 'cyan';
   sub?: string;
 }) {
   const accents = {
     slate: 'bg-slate-100 text-slate-600',
     blue: 'bg-blue-50 text-blue-600',
+    sky: 'bg-sky-50 text-sky-600',
     emerald: 'bg-emerald-50 text-emerald-600',
     amber: 'bg-amber-50 text-amber-600',
     rose: 'bg-rose-50 text-rose-600',
@@ -96,7 +97,7 @@ export function Toggle({ checked, onChange, label }: { checked: boolean; onChang
       <button
         type="button"
         onClick={() => onChange(!checked)}
-        className={`relative h-5 w-9 rounded-full transition-colors ${checked ? 'bg-slate-900' : 'bg-slate-300'}`}
+        className={`relative h-5 w-9 rounded-full transition-colors ${checked ? 'bg-sky-600' : 'bg-slate-300'}`}
       >
         <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-4' : 'translate-x-0.5'}`} />
       </button>

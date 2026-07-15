@@ -75,7 +75,7 @@ export default function App() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
         <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-slate-900" />
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-sky-600" />
           <p className="mt-3 text-sm text-slate-500">Cargando sistema...</p>
         </div>
       </div>
@@ -134,7 +134,7 @@ export default function App() {
           />
         )}
         {rol === 'supervisor' && activeNav === 'reportes' && (
-          <SupervisorReportes tickets={tickets} users={users} />
+          <SupervisorReportes tickets={tickets} users={users} categories={categories} />
         )}
 
         {rol === 'admin' && activeNav === 'dashboard' && (

@@ -1,8 +1,13 @@
 import { supabase } from './supabase';
 import type {
-  Area, AuditLog, Category, Prioridad, SecurityEvent, SlaConfig,
+  Area, AuditLog, Category, Estado, Prioridad, SecurityEvent, SlaConfig,
   Ticket, TicketEvent, TicketWithRelations, User,
 } from './types';
+import { canTransition, COMMENT_REQUIRED_STATES, ESCALATABLE_STATES, INFO_REQUESTABLE_STATES } from './flow';
+
+function newAuditId(): string {
+  return `AUD-${Date.now().toString().slice(-6)}`;
+}
 
 // ---------- Users ----------
 export async function fetchUsers(): Promise<User[]> {
@@ -204,31 +209,166 @@ export async function assignTicket(
 
 export async function changeTicketEstado(
   ticketId: string,
-  nuevoEstado: string,
+  nuevoEstado: Estado,
   actorId: string,
   actorNombre: string,
   comentario?: string,
 ): Promise<void> {
   const { data: t } = await supabase.from('tickets').select('estado, codigo').eq('id', ticketId).maybeSingle();
   if (!t) return;
-  const patch: Partial<Ticket> = { estado: nuevoEstado as Ticket['estado'] };
+  const estadoActual = t.estado as Estado;
+
+  if (!canTransition(estadoActual, nuevoEstado)) {
+    throw new Error(
+      `No se puede pasar de "${estadoActual}" a "${nuevoEstado}". El ticket debe seguir el flujo definido.`,
+    );
+  }
+  if (COMMENT_REQUIRED_STATES.includes(nuevoEstado) && !comentario?.trim()) {
+    throw new Error(`Debe ingresar un comentario para marcar el ticket como "${nuevoEstado}".`);
+  }
+
+  const patch: Partial<Ticket> = { estado: nuevoEstado };
   if (nuevoEstado === 'cerrado' || nuevoEstado === 'resuelto') patch.closed_at = new Date().toISOString();
   await supabase.from('tickets').update(patch).eq('id', ticketId);
   await supabase.from('ticket_events').insert({
     ticket_id: ticketId,
     tipo: 'cambio_estado',
     usuario_id: actorId,
-    comentario: comentario ?? `Estado cambiado a ${nuevoEstado}`,
-    estado_anterior: t.estado,
+    comentario: comentario?.trim() || `Estado cambiado a ${nuevoEstado}`,
+    estado_anterior: estadoActual,
     estado_nuevo: nuevoEstado,
   });
   await supabase.from('audit_log').insert({
-    event_id: `AUD-${Date.now().toString().slice(-6)}`,
+    event_id: newAuditId(),
     ticket_id: t.codigo,
     tipo: 'cambio_estado',
     usuario_id: actorId,
     usuario_nombre: actorNombre,
-    detalles: `Cambió estado de ${t.estado} a ${nuevoEstado}`,
+    detalles: `Cambió estado de ${estadoActual} a ${nuevoEstado}`,
+  });
+}
+
+// ---------- Solicitar información adicional (HU-11 / RF-19 / RF-20) ----------
+export async function requestInfo(
+  ticketId: string,
+  mensaje: string,
+  actorId: string,
+  actorNombre: string,
+): Promise<void> {
+  if (!mensaje.trim()) {
+    throw new Error('Debe especificar qué información se requiere.');
+  }
+  const { data: t } = await supabase.from('tickets').select('estado, codigo').eq('id', ticketId).maybeSingle();
+  if (!t) return;
+  const estadoActual = t.estado as Estado;
+  if (!INFO_REQUESTABLE_STATES.includes(estadoActual)) {
+    throw new Error('Solo se puede solicitar información desde "En revisión" o "Confirmado".');
+  }
+
+  await supabase.from('tickets').update({
+    estado: 'info',
+    estado_previo: estadoActual,
+    sla_paused: true, // el conteo de SLA se suspende automáticamente (RF-20)
+  }).eq('id', ticketId);
+
+  await supabase.from('ticket_events').insert({
+    ticket_id: ticketId,
+    tipo: 'solicitud_info',
+    usuario_id: actorId,
+    comentario: mensaje.trim(),
+    estado_anterior: estadoActual,
+    estado_nuevo: 'info',
+  });
+
+  await supabase.from('audit_log').insert({
+    event_id: newAuditId(),
+    ticket_id: t.codigo,
+    tipo: 'solicitud_info',
+    usuario_id: actorId,
+    usuario_nombre: actorNombre,
+    detalles: `Solicitó información adicional: "${mensaje.trim()}"`,
+  });
+}
+
+// ---------- Respuesta del Solicitante a una solicitud de información ----------
+export async function respondInfo(
+  ticketId: string,
+  respuesta: string,
+  actorId: string,
+  actorNombre: string,
+): Promise<void> {
+  if (!respuesta.trim()) {
+    throw new Error('Debe escribir una respuesta antes de continuar.');
+  }
+  const { data: t } = await supabase
+    .from('tickets').select('estado, estado_previo, codigo').eq('id', ticketId).maybeSingle();
+  if (!t || t.estado !== 'info') return;
+  const destino = (t.estado_previo as Estado) ?? 'revision';
+
+  await supabase.from('tickets').update({
+    estado: destino,
+    estado_previo: null,
+    sla_paused: false, // se reanuda el conteo de SLA
+  }).eq('id', ticketId);
+
+  await supabase.from('ticket_events').insert({
+    ticket_id: ticketId,
+    tipo: 'comentario',
+    usuario_id: actorId,
+    comentario: `Respuesta del solicitante: ${respuesta.trim()}`,
+    estado_anterior: 'info',
+    estado_nuevo: destino,
+  });
+
+  await supabase.from('audit_log').insert({
+    event_id: newAuditId(),
+    ticket_id: t.codigo,
+    tipo: 'respuesta_info',
+    usuario_id: actorId,
+    usuario_nombre: actorNombre,
+    detalles: 'El solicitante respondió a la solicitud de información. El técnico fue notificado.',
+  });
+}
+
+// ---------- Escalamiento a área designada (HU-12 / RF-21, RF-22, RF-23) ----------
+export async function escalateTicket(
+  ticketId: string,
+  areaId: string,
+  motivo: string,
+  actorId: string,
+  actorNombre: string,
+): Promise<void> {
+  if (!areaId) throw new Error('Debe seleccionar el área destino.');
+  if (!motivo.trim()) throw new Error('Debe ingresar el motivo del escalamiento.');
+
+  const { data: t } = await supabase.from('tickets').select('estado, codigo').eq('id', ticketId).maybeSingle();
+  if (!t) return;
+  const estadoActual = t.estado as Estado;
+  if (!ESCALATABLE_STATES.includes(estadoActual)) {
+    throw new Error('Solo se pueden escalar tickets en estado "En revisión" o "Confirmado".');
+  }
+
+  const { data: area } = await supabase.from('areas').select('nombre').eq('id', areaId).maybeSingle();
+  const areaNombre = area?.nombre ?? 'área designada';
+
+  await supabase.from('tickets').update({ area_id: areaId }).eq('id', ticketId);
+
+  await supabase.from('ticket_events').insert({
+    ticket_id: ticketId,
+    tipo: 'escalamiento',
+    usuario_id: actorId,
+    comentario: `Escalado a ${areaNombre}. Motivo: ${motivo.trim()}`,
+    estado_anterior: estadoActual,
+    estado_nuevo: estadoActual,
+  });
+
+  await supabase.from('audit_log').insert({
+    event_id: newAuditId(),
+    ticket_id: t.codigo,
+    tipo: 'escalamiento',
+    usuario_id: actorId,
+    usuario_nombre: actorNombre,
+    detalles: `Escaló el ticket a ${areaNombre} — Motivo: ${motivo.trim()}. Área y solicitante notificados.`,
   });
 }
 

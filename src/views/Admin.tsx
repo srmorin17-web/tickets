@@ -29,7 +29,7 @@ export function AdminDashboard({
         <p className="mt-1 text-sm text-slate-500">Configuración y monitoreo del sistema.</p>
       </div>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard label="Usuarios activos" value={activos} icon={<Users size={18} />} accent="blue" />
+        <StatCard label="Usuarios activos" value={activos} icon={<Users size={18} />} accent="sky" />
         <StatCard label="Técnicos" value={tecnicos} icon={<CheckCircle2 size={18} />} accent="emerald" />
         <StatCard label="Eventos audit" value={eventosAudit} icon={<Activity size={18} />} accent="slate" />
         <StatCard label="Accesos bloqueados" value={bloqueos} icon={<Shield size={18} />} accent="rose" />
@@ -95,7 +95,7 @@ export function AdminUsuarios({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Buscar usuario..."
-          className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-10 pr-3 text-sm outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+          className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-10 pr-3 text-sm outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
         />
       </div>
 
@@ -264,12 +264,12 @@ export function AdminCategorias({
                     <td className="py-3 pr-4">
                       <input type="number" value={resp}
                         onChange={(e) => setSlaEdits((p) => ({ ...p, [s.id]: { ...p[s.id], horas_respuesta: +e.target.value } }))}
-                        className="w-20 rounded-md border border-slate-300 px-2 py-1 text-sm outline-none focus:border-slate-900" />
+                        className="w-20 rounded-md border border-slate-300 px-2 py-1 text-sm outline-none focus:border-sky-500" />
                     </td>
                     <td className="py-3 pr-4">
                       <input type="number" value={res}
                         onChange={(e) => setSlaEdits((p) => ({ ...p, [s.id]: { ...p[s.id], horas_resolucion: +e.target.value } }))}
-                        className="w-20 rounded-md border border-slate-300 px-2 py-1 text-sm outline-none focus:border-slate-900" />
+                        className="w-20 rounded-md border border-slate-300 px-2 py-1 text-sm outline-none focus:border-sky-500" />
                     </td>
                     <td className="py-3">
                       <Button size="sm" variant="ghost" onClick={() => saveSla(s.id)} disabled={!slaEdits[s.id]}>

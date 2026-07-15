@@ -46,6 +46,7 @@ export interface Ticket {
   categoria_id: string | null;
   prioridad: Prioridad;
   estado: Estado;
+  estado_previo: Estado | null;
   solicitante_id: string | null;
   tecnico_id: string | null;
   area_id: string | null;
